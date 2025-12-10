@@ -12,8 +12,6 @@ if (!GEMINI_API_KEY) {
 }
 
 // 2. Initialize the Gemini AI client
-// Note: We use the default client initialization. Explicit timeout for the client is 
-// handled via Node's HTTP agent or a wrapper, but we rely on the Express timeout below.
 const ai = new GoogleGenAI({});
 
 // 3. Server Setup
@@ -25,20 +23,16 @@ const SERVER_TIMEOUT_MS = 60000; // 60 seconds
 
 // --- MIDDLEWARE ---
 
-// CORS Configuration: Allows your frontend (docs) to talk to this backend (Render)
-// IMPORTANT: In production, change '*' to your specific frontend URL (e.g., 'https://your-app.netlify.app')
 app.use(cors({
     origin: '*', 
     methods: ['POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type'],
 }));
 
-// Enable body parsing for JSON data
 app.use(express.json());
 
 // --- ROUTES ---
 
-// Health Check Route (Good for Render monitoring)
 app.get('/', (req, res) => {
     res.status(200).send('Lesson Plan Generator Backend is running and healthy.');
 });
@@ -49,18 +43,16 @@ app.post('/api/generate-lesson-plan', async (req, res) => {
     const { prompt } = req.body;
 
     // Set a response timeout for this specific route.
-    // If the request takes longer than 60 seconds, it will send a 503 error.
     const RESPONSE_TIMEOUT_MS = 60000; // 60 seconds
     res.setTimeout(RESPONSE_TIMEOUT_MS, () => {
         console.warn('Request timed out after 60 seconds (response.setTimeout).');
-        // Check if headers have already been sent before sending the timeout response
         if (!res.headersSent) {
             res.status(503).json({ error: 'Nalampasan ang timeout (60s). Subukan ulit. (AI Service Unavailable)' });
+            // IMPORTANT: Ensure the connection is closed after sending the error response
+            res.end(); 
         }
-        res.end();
     });
     
-    // Basic input validation
     if (!prompt) {
         return res.status(400).json({ error: 'Missing "prompt" in request body.' });
     }
@@ -86,16 +78,15 @@ app.post('/api/generate-lesson-plan', async (req, res) => {
         res.status(200).json({ generatedText });
 
     } catch (error) {
-        // Log the detailed error on the server side
         console.error('Error during Gemini API call:', error.message);
         
-        // Send a generic error message back to the client if the error occurred 
-        // before the timeout handler caught it.
+        // Only send an error response if headers haven't already been sent 
+        // by the timeout handler (503 error).
         if (!res.headersSent) {
-             // 408 is Request Timeout, 500 is Internal Server Error
             res.status(500).json({ 
                 error: `Naganap ang internal server error sa pag-access sa AI service. (${error.message.substring(0, 50)}...)`
             });
+            res.end(); // Ensure clean exit after sending the 500 error
         }
     }
 });
@@ -104,6 +95,12 @@ app.post('/api/generate-lesson-plan', async (req, res) => {
 // --- SERVER STARTUP ---
 
 const server = app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
+    console.log(`Access the API at http://localhost:${PORT}`);
+});
+
+server.setTimeout(SERVER_TIMEOUT_MS); 
+console.log(`Server socket timeout set to ${SERVER_TIMEOUT_MS / 1000} seconds.`);
     console.log(`Server listening on port ${PORT}`);
     console.log(`Access the API at http://localhost:${PORT}`);
 });

@@ -77,7 +77,8 @@ app.post('/api/generate-lesson-plan', async (req, res) => {
         // Send the generated text back to the frontend
         res.status(200).json({ generatedText });
 
-    } catch (error) {
+    }
+    catch (error) {
         console.error('Error during Gemini API call:', error.message);
         
         if (!res.headersSent) {

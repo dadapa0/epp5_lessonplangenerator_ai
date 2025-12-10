@@ -1,15 +1,26 @@
-// **NOTE ON SECURITY:** // In a real application, replace 'YOUR_BACKEND_ENDPOINT' 
-// with a server-side endpoint that securely calls the Gemini API, 
-// rather than exposing the API key directly in client-side code.
+// --- CONFIGURATION ---
 
-const FORM_ENDPOINT = '/api/generate-lesson-plan'; // Hypothetical backend endpoint
+// NOTE: Since your frontend and backend are deployed separately (e.g., Netlify/Render), 
+// we cannot use a simple relative path like '/api/generate-lesson-plan'.
+// We must assume the backend URL is either globally set (best practice, but complex) 
+// or, for simplicity in a single-file script, we'll assume the client URL base.
+
+// FIX: Set this variable to your live Render Backend URL. 
+// Example: const API_BASE_URL = "https://lesson-plan-ai-api.onrender.com";
+// If you cannot set a global environment variable in your frontend host, 
+// you MUST manually update this URL after deploying your Render backend.
+const API_BASE_URL = "https://lesson-plan-ai-api.onrender.com"; // **<<< UPDATE THIS URL!** const FORM_ENDPOINT = `${API_BASE_URL}/api/generate-lesson-plan`; 
+
 const form = document.getElementById('lessonPlanForm');
 const outputSection = document.getElementById('lessonPlanOutput');
 const generateBtn = document.getElementById('generateBtn');
 
+// --- MAIN FORM HANDLER ---
+
 form.addEventListener('submit', async function(e) {
     e.preventDefault();
     
+    // Clear previous output and set loading state
     generateBtn.textContent = 'Bumubuo... Sandali lang!';
     generateBtn.disabled = true;
     outputSection.style.display = 'none';
@@ -43,7 +54,6 @@ form.addEventListener('submit', async function(e) {
     `;
 
     // 2. Define the requests for the AI
-    // We send a different, specific prompt for each required output.
     const requests = {
         // AI Prompts: Detailed and contextualized
         refOutput: `${context} Gumawa ng BATAYANG SANGGUNIAN SA PAGKATUTO, batay sa aklat ng EPP 5 at online resources. Magbigay ng 3-4 entries.`,
@@ -59,7 +69,7 @@ form.addEventListener('submit', async function(e) {
         assessmentOutput: `${context} Gumawa ng 1. Pagsusulit (5 items). Multiple Choice o Identification (fill in the blanks) batay sa Nilalaman/Topic.`,
     };
 
-    // 3. Loop through all requests and send to the API (or backend)
+    // 3. Loop through all requests and send to the API
     const outputKeys = Object.keys(requests);
     const promises = outputKeys.map(key => callApi(requests[key]));
     
@@ -73,29 +83,28 @@ form.addEventListener('submit', async function(e) {
 
         // Display the output and restore button
         outputSection.style.display = 'block';
-        generateBtn.textContent = 'Bumuo ng Lesson Plan';
-        generateBtn.disabled = false;
 
     } catch (error) {
+        // Display a user-friendly error from the server
+        const errorMessage = error.message.includes("HTTP error") 
+                           ? `May naganap na error sa server: ${error.message}` 
+                           : 'Hindi makakonekta. Paki-check ang iyong network at URL.';
+
+        alert(`Generation Failed: ${errorMessage}`);
         console.error('API Generation Error:', error);
-        alert('May naganap na error sa pagbuo ng lesson plan. Paki-check ang console para sa detalye.');
+        
+    } finally {
         generateBtn.textContent = 'Bumuo ng Lesson Plan';
         generateBtn.disabled = false;
     }
 });
 
 /**
- * Function to call the API for content generation
+ * Function to securely call the Backend API Endpoint (Render)
  * @param {string} prompt The specific instructional prompt for the AI
  * @returns {Promise<string>} The generated text content
  */
 async function callApi(prompt) {
-    // **This is where the API call happens. Replace with your actual implementation.**
-    
-    // ----------------------------------------------------------------------
-    // OPTION A: Using a secure Backend Endpoint (RECOMMENDED)
-    // ----------------------------------------------------------------------
-    /*
     const response = await fetch(FORM_ENDPOINT, {
         method: 'POST',
         headers: {
@@ -105,53 +114,11 @@ async function callApi(prompt) {
     });
 
     if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        // If the server sends a 503 (timeout), the text response will contain the JSON error message
+        let errorBody = await response.json().catch(() => ({ error: `HTTP status ${response.status}` }));
+        throw new Error(`HTTP error! status: ${response.status}. Server message: ${errorBody.error || 'Unknown error.'}`);
     }
 
     const data = await response.json();
-    return data.generatedText; // Assuming the backend returns { generatedText: "..." }
-    */
-
-    // ----------------------------------------------------------------------
-    // OPTION B: Direct Gemini API call for PROTOTYPING ONLY (INSECURE)
-    // ----------------------------------------------------------------------
-    
-    // Replace YOUR_API_KEY with your actual Gemini API Key
-    const GEMINI_API_KEY = 'YOUR_API_KEY_HERE'; 
-    const GEMINI_MODEL = 'gemini-2.5-flash';
-    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
-
-    const payload = {
-        contents: [{
-            parts: [{ text: prompt }]
-        }],
-        config: {
-            temperature: 0.8, // Adjust creativity
-            maxOutputTokens: 1024 // Adjust length as needed
-        }
-    };
-
-    const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-    });
-
-    if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Gemini API Error! Status: ${response.status}. Details: ${errorText}`);
-    }
-
-    const data = await response.json();
-    // Safely extract the generated text
-    try {
-        return data.candidates[0].content.parts[0].text;
-    } catch (e) {
-        console.warn("Could not parse Gemini response:", data);
-        return "Hindi makabuo ng sagot. Subukan ulit. (AI parse error)";
-    }
+    return data.generatedText; // The expected field from the backend/index.js
 }
-
-

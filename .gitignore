@@ -1,1 +1,14 @@
+# ----------------------------------------------------------------------
+# Node.js/Backend (backend/ folder)
+# ----------------------------------------------------------------------
 
+# The folder where Node.js installs all dependencies. It is large and generated.
+/backend/node_modules
+
+# Local environment variables file (contains your actual GEMINI_API_KEY for local dev)
+# We only commit the .env.example template, not the secret .env file itself.
+.env
+
+# Logs and cache files
+npm-debug.log*
+.DS_Store

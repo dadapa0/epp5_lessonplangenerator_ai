@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fil">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson Plan Generator - EPP 5</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>EPP 5 LESSON PLAN GENERATOR AI</h1>
+        <p style="font-style:italic";>by &copyKensanity Solutions</p>
+    </header>
+
+    <main>
+        <form id="lessonPlanForm">
+            <section class="basic-info-section">
+                <h2>Teacher's Basic Info'</h2>
+                <div class="input-group">
+                    <label for="teacherName">Name of Teacher:</label>
+                    <input type="text" id="teacherName" name="teacherName" style="font-color:purple"; required>
+                </div>
+                <div class="input-group">
+                    <label for="school">School:</label>
+                    <input type="text" id="school" name="school" required>
+                </div>
+                <div class="input-group">
+                    <label for="schoolYear">School Year:</label>
+                    <input type="text" id="schoolYear" name="schoolYear" required>
+                </div>
+                <div class="input-group">
+                    <label for="subject">Subject:</label>
+                    <input type="text" id="subject" name="subject" value="EPP 5" readonly>
+                </div>
+                <div class="input-group">
+                    <label for="element">Element:</label>
+                    <select id"eppSelect">
+                        <option value="" disabled selected>Select element</option>
+                        <option value="ICT">Information and Communications Technology (ICT)</option>
+                        <option value="AFA">Agri-fisheries and Arts (AFA)</option>
+                        <option value="FCS">Family and Consumer Science (FCS)</option>
+                        <option value="IA">Industrial Arts (IA)</option>
+                    </select>
+                </div>
+                 <div class="input-group">
+                    <label for="quarter">Quarter:</label>
+                     <select id="selectQuarter">
+                        <option value="" disabled selected>Select Quarter!</option>
+                        <option value="Quarter 1">Quarter 1</option>
+                        <option value="Quarter 2">Quarter 2</option> 
+                         <option value="Quarter 3">Quarter 3</option>
+                         <option value="Quarter 4">Quarter 4</option>
+                     </select>
+                </div>
+                <div class="input-group">
+                    <label for="week">Week:</label>
+                     <select id="weekSelect">
+                        <option value="" disabled selected>Select week number!</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                    </select>
+                </div>
+            </section>
+
+            <section class="user-input-section">
+                <h2>I. NILALAMAN NG KURIKULUM, PAMANTAYAN, AT MGA KASANAYAN SA ARALIN</h2>
+                <div class="input-group">
+                    <label for="contentStandards">A. Mga Pamantayang Pangnilalaman:</label>
+                    <textarea id="contentStandards" name="contentStandards" rows="3" required></textarea>
+                </div>
+                <div class="input-group">
+                    <label for="performanceStandards">B. Mga Pamantayan sa Pagganap:</label>
+                    <textarea id="performanceStandards" name="performanceStandards" rows="3" required></textarea>
+                </div>
+                <div class="input-group">
+                    <label for="learningCompetencies">C. Mga Kasanayan at Layuning Pampagkatuto:</label>
+                    <textarea id="learningCompetencies" name="learningCompetencies" rows="3" required></textarea>
+                </div>
+                <div class="input-group">
+                    <label for="content">D. Nilalaman (Topic):</label>
+                    <input type="text" id="content" name="content" required>
+                </div>
+                <div class="input-group">
+                    <label for="integration">E. Integrasyon:</label>
+                    <input type="text" id="integration" name="integration">
+                </div>
+                <div class="input-group">
+                    <label for="materials">F. Mga Kagamitan:</label>
+                    <textarea id="materials" name="materials" rows="2"></textarea>
+                </div>
+            </section>
+
+            <button type="submit" id="generateBtn">Bumuo ng Lesson Plan</button>
+        </form>
+
+        <section id="lessonPlanOutput" class="output-section" style="display:none;">
+            <h2>Nabuo na Lesson Plan</h2>
+            
+            <div class="output-part">
+                <h3>II. BATAYANG SANGGUNIAN SA PAGKATUTO</h3>
+                <p id="refOutput"></p>
+            </div>
+
+            <div class="output-part">
+                <h3>III. MGA HAKBANG SA PAGTUTURO AT PAGKATUTO</h3>
+                
+                <h4>A. Pagkuha ng Dating Kaalaman</h4>
+                <p>1. Maikling Balik-aral:</p>
+                <div id="balikAralOutput" class="ai-gen-content"></div>
+                <p>2. Pidbak: Tanong-Tugon:</p>
+                <div id="feedbackOutput" class="ai-gen-content"></div>
+
+                <h4>B. Paglahad ng Layunin</h4>
+                <p>1. Panghikayat na Gawain:</p>
+                <div id="hookActivityOutput" class="ai-gen-content"></div>
+                <p>2. Paglinang sa Kahalagahan sa Pagkatuto sa Aralin</p>
+                <p class="note">Isulat sa loob ng bilog ang mga nakalap na impormasyon:</p>
+                <div id="importanceOutput" class="ai-gen-content"></div>
+                <p>3. Paghawan ng Bokabolaryo sa Nilalaman ng Aralin:</p>
+                <div id="vocabularyOutput" class="ai-gen-content"></div>
+
+                <h4>C. Paglinang at Pagpapalalim</h4>
+                <p>1. Pagproseso sa Pag-unawa:</p>
+                <div id="processingOutput" class="ai-gen-content"></div>
+                <p>2. Pinatnubayang Pagsasanay:</p>
+                <div id="guidedPracticeOutput" class="ai-gen-content"></div>
+                <p>3. Paglalapat at Pag-uugnay:</p>
+                <div id="applicationOutput" class="ai-gen-content"></div>
+
+                <h4>D. Paglalahat</h4>
+                <p>1. Pabaong Pagkatuto:</p>
+                <div id="takeawayOutput" class="ai-gen-content"></div>
+                <p>2. Pagninilay sa Pagkatuto:</p>
+                </div>
+
+            <div class="output-part">
+                <h3>IV. EBALWAYSON NG PAGKATUTO: PAGTATAYA AT PAGNINILAY</h3>
+                <h4>A. Pagtataya</h4>
+                <p>1. Pagsusulit (5 items):</p>
+                <div id="assessmentOutput" class="ai-gen-content"></div>
+            </div>
+
+            <button onclick="window.print()">I-print ang Lesson Plan</button>
+        </section>
+    </main>
+
+    <footer>
+        <p style="font-style:italic";>©2025 Simple Lesson Plan Generator AI by Kensanity Solutions</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>

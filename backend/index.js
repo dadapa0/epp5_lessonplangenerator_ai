@@ -12,7 +12,8 @@ if (!GEMINI_API_KEY) {
 }
 
 // 2. Initialize the Gemini AI client
-const ai = new GoogleGenAI({});
+// FIX: Pass the API key explicitly to the constructor for reliability.
+const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY }); 
 
 // 3. Server Setup
 const app = express();
@@ -48,7 +49,6 @@ app.post('/api/generate-lesson-plan', async (req, res) => {
         console.warn('Request timed out after 60 seconds (response.setTimeout).');
         if (!res.headersSent) {
             res.status(503).json({ error: 'Nalampasan ang timeout (60s). Subukan ulit. (AI Service Unavailable)' });
-            // IMPORTANT: Ensure the connection is closed after sending the error response
             res.end(); 
         }
     });
@@ -80,13 +80,11 @@ app.post('/api/generate-lesson-plan', async (req, res) => {
     } catch (error) {
         console.error('Error during Gemini API call:', error.message);
         
-        // Only send an error response if headers haven't already been sent 
-        // by the timeout handler (503 error).
         if (!res.headersSent) {
             res.status(500).json({ 
                 error: `Naganap ang internal server error sa pag-access sa AI service. (${error.message.substring(0, 50)}...)`
             });
-            res.end(); // Ensure clean exit after sending the 500 error
+            res.end();
         }
     }
 });
@@ -99,12 +97,5 @@ const server = app.listen(PORT, () => {
     console.log(`Access the API at http://localhost:${PORT}`);
 });
 
-server.setTimeout(SERVER_TIMEOUT_MS); 
-console.log(`Server socket timeout set to ${SERVER_TIMEOUT_MS / 1000} seconds.`);
-    console.log(`Server listening on port ${PORT}`);
-    console.log(`Access the API at http://localhost:${PORT}`);
-});
-
-// Set a global socket timeout on the server to handle idle connections
 server.setTimeout(SERVER_TIMEOUT_MS); 
 console.log(`Server socket timeout set to ${SERVER_TIMEOUT_MS / 1000} seconds.`);

@@ -9,8 +9,8 @@
 // Example: const API_BASE_URL = "https://lesson-plan-ai-api.onrender.com";
 // If you cannot set a global environment variable in your frontend host, 
 // you MUST manually update this URL after deploying your Render backend.
-const API_BASE_URL = "https://epp5-lessonplangenerator-ai.onrender.com"; // **<<< UPDATE THIS URL!** const FORM_ENDPOINT = `${API_BASE_URL}/api/generate-lesson-plan`; 
 
+const API_BASE_URL = "https://epp5-lessonplangenerator-ai.onrender.com"; // **<<< UPDATE THIS URL!** const FORM_ENDPOINT = `${API_BASE_URL}/api/generate-lesson-plan`; 
 const form = document.getElementById('lessonPlanForm');
 const outputSection = document.getElementById('lessonPlanOutput');
 const generateBtn = document.getElementById('generateBtn');
@@ -21,7 +21,7 @@ form.addEventListener('submit', async function(e) {
     e.preventDefault();
     
     // Clear previous output and set loading state
-    generateBtn.textContent = 'Bumubuo... Sandali lang!';
+    generateBtn.textContent = 'Generating.... Please wait!';
     generateBtn.disabled = true;
     outputSection.style.display = 'none';
 
@@ -87,14 +87,14 @@ form.addEventListener('submit', async function(e) {
     } catch (error) {
         // Display a user-friendly error from the server
         const errorMessage = error.message.includes("HTTP error") 
-                           ? `May naganap na error sa server: ${error.message}` 
-                           : 'Hindi makakonekta. Paki-check ang iyong network at URL.';
+                           ? `Server error: ${error.message}` 
+                           : 'Can't connect. Please check network status and url.';
 
         alert(`Generation Failed: ${errorMessage}`);
         console.error('API Generation Error:', error);
         
     } finally {
-        generateBtn.textContent = 'Bumuo ng Lesson Plan';
+        generateBtn.textContent = 'Generate Lesson Plan';
         generateBtn.disabled = false;
     }
 });

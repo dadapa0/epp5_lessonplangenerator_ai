@@ -10,7 +10,9 @@
 // If you cannot set a global environment variable in your frontend host, 
 // you MUST manually update this URL after deploying your Render backend.
 
-const API_BASE_URL = "https://epp5-lessonplangenerator-ai.onrender.com"; // **<<< UPDATE THIS URL!** const FORM_ENDPOINT = `${API_BASE_URL}/api/generate-lesson-plan`; 
+const API_BASE_URL = "https://epp5-lessonplangenerator-ai.onrender.com"; // **<<< UPDATE THIS URL!** // FIXED: Separated the FORM_ENDPOINT declaration onto its own line for proper compilation.
+const FORM_ENDPOINT = `${API_BASE_URL}/api/generate-lesson-plan`; 
+
 const form = document.getElementById('lessonPlanForm');
 const outputSection = document.getElementById('lessonPlanOutput');
 const generateBtn = document.getElementById('generateBtn');
@@ -60,50 +62,7 @@ form.addEventListener('submit', async function(e) {
         balikAralOutput: `${context} Gumawa ng 1. Maikling Balik-aral. Magbigay ng 2-3 tanong na nakatuon sa nakaraang aralin.`,
         feedbackOutput: `${context} Gumawa ng 2. Pidbak: Tanong-Tugon. Magbigay ng 2-3 tanong para sa quick check ng pag-unawa.`,
         hookActivityOutput: `${context} Gumawa ng 1. Panghikayat na Gawain. Isang simpleng laro o aktibidad na may 2-3 hakbang.`,
-        importanceOutput: `${context} Gumawa ng 2. Paglinang sa Kahalagahan sa Pagkatuto. Magbigay ng 3-4 na mahahalagang punto na isusulat sa loob ng bilog.`,
-        vocabularyOutput: `${context} Gumawa ng 3. Paghawan ng Bokabolaryo. Magbigay ng 3-4 na mahihirap na salita mula sa Nilalaman/Topic, kasama ang depinisyon.`,
-        processingOutput: `${context} Gumawa ng 1. Pagproseso sa Pag-unawa. Magbigay ng maikling talakayan (2-3 talata) at 2-3 tanong.`,
-        guidedPracticeOutput: `${context} Gumawa ng 2. Pinatnubayang Pagsasanay. Isang simpleng gawain na ginagawa nang pangkat/magkasama. Magbigay ng 3 hakbang.`,
-        applicationOutput: `${context} Gumawa ng 3. Paglalapat at Pag-uugnay. Isang indibidwal na gawain na nag-uugnay ng aralin sa tunay na buhay. Magbigay ng 3-4 na tanong/scenario.`,
-        takeawayOutput: `${context} Gumawa ng 1. Pabaong Pagkatuto. Isang concise na paglalahat (generalization) ng buong aralin sa 2-3 pangungusap.`,
-        assessmentOutput: `${context} Gumawa ng 1. Pagsusulit (5 items). Multiple Choice o Identification (fill in the blanks) batay sa Nilalaman/Topic.`,
-    };
-
-    // 3. Loop through all requests and send to the API
-    const outputKeys = Object.keys(requests);
-    const promises = outputKeys.map(key => callApi(requests[key]));
-    
-    try {
-        const results = await Promise.all(promises);
-
-        // 4. Update the DOM with the results
-        outputKeys.forEach((key, index) => {
-            document.getElementById(key).innerHTML = results[index];
-        });
-
-        // Display the output and restore button
-        outputSection.style.display = 'block';
-
-    } catch (error) {
-        // Display a user-friendly error from the server
-        const errorMessage = error.message.includes("HTTP error") 
-                           ? `Server error: ${error.message}` 
-                           : 'Can't connect. Please check network status and url.';
-
-        alert(`Generation Failed: ${errorMessage}`);
-        console.error('API Generation Error:', error);
-        
-    } finally {
-        generateBtn.textContent = 'Generate Lesson Plan';
-        generateBtn.disabled = false;
-    }
-});
-
-/**
- * Function to securely call the Backend API Endpoint (Render)
- * @param {string} prompt The specific instructional prompt for the AI
- * @returns {Promise<string>} The generated text content
- */
+        importanceOutput: `${context} Gumawa ng 2. Paglinang sa Kahalagahan sa Pagkatuto. Magbigay
 async function callApi(prompt) {
     const response = await fetch(FORM_ENDPOINT, {
         method: 'POST',

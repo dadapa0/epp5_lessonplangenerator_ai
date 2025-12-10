@@ -9,7 +9,7 @@
 // Example: const API_BASE_URL = "https://lesson-plan-ai-api.onrender.com";
 // If you cannot set a global environment variable in your frontend host, 
 // you MUST manually update this URL after deploying your Render backend.
-const API_BASE_URL = "https://lesson-plan-ai-api.onrender.com"; // **<<< UPDATE THIS URL!** const FORM_ENDPOINT = `${API_BASE_URL}/api/generate-lesson-plan`; 
+const API_BASE_URL = "https://epp5-lessonplangenerator-ai.onrender.com"; // **<<< UPDATE THIS URL!** const FORM_ENDPOINT = `${API_BASE_URL}/api/generate-lesson-plan`; 
 
 const form = document.getElementById('lessonPlanForm');
 const outputSection = document.getElementById('lessonPlanOutput');

@@ -1,0 +1,169 @@
+:root {
+    --primary-color: #6a0dad; /* Deep Purple */
+    --secondary-color: #ff00ff; /* Fuschia Pink */
+    --background-color: #f4f4f9;
+    --text-color: #333;
+    --light-text-color: #fff;
+    --accent-light: #e6e6fa; /* Lavender */
+}
+
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+header {
+    background-color: var(--primary-color);
+    color: var(--light-text-color);
+    padding: 20px 10px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2, h3, h4 {
+    color: var(--primary-color);
+    margin-top: 20px;
+}
+
+header h1 {
+    color: var(--secondary-color);
+}
+
+main {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 0 15px;
+}
+
+section {
+    background: var(--light-text-color);
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border-left: 5px solid var(--secondary-color);
+}
+
+/* Form and Input Styles (Updated to include SELECT) */
+.input-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+/* Target all text inputs, textareas, AND select elements */
+input[type="text"], textarea, select {
+    width: 100%;
+    padding: 10px;
+    /* Adjust height by padding, and font size */
+    font-size: 1em; /* Set font size similar to standard text input */
+    height: auto; /* Allow padding to determine height */
+    
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Ensures padding doesn't affect the overall width */
+    transition: border-color 0.3s;
+    /* For select, make sure the background is white */
+    background-color: #fff; 
+    /* Remove default appearance for cross-browser consistency (optional, but helps matching) */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    /* Add a custom down arrow (optional, to match style) */
+    background-image: linear-gradient(45deg, transparent 50%, #ccc 50%),
+                      linear-gradient(135deg, #ccc 50%, transparent 50%);
+    background-position: calc(100% - 20px) calc(1em + 2px),
+                         calc(100% - 15px) calc(1em + 2px);
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+}
+
+/* Adjustments for the select dropdown when focused */
+input[type="text"]:focus, textarea:focus, select:focus {
+    border-color: var(--secondary-color);
+    outline: none;
+    box-shadow: 0 0 5px rgba(255, 0, 255, 0.3);
+}
+
+/* Button Styling */
+button {
+    background-color: var(--primary-color);
+    color: var(--light-text-color);
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.1s;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+/* Output Section Styling */
+.output-section {
+    border: 2px solid var(--primary-color);
+    padding: 30px;
+    margin-top: 30px;
+}
+
+.output-part h3 {
+    background-color: var(--accent-light);
+    padding: 8px;
+    border-radius: 4px;
+    border-left: 5px solid var(--primary-color);
+}
+
+.ai-gen-content {
+    background-color: #fff0ff; /* Very light pink/fuschia */
+    padding: 10px;
+    border-left: 3px solid var(--secondary-color);
+    margin-bottom: 15px;
+    white-space: pre-wrap; /* Preserve line breaks from AI generation */
+}
+
+/* Specific styling for the circle instruction */
+.note {
+    font-style: italic;
+    color: var(--primary-color);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: var(--primary-color);
+    color: var(--accent-light);
+    margin-top: 20px;
+    font-size: 0.8em;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 1.5em;
+    }
+
+    main {
+        padding: 0 10px;
+    }
+
+    button {
+        width: 100%;
+        margin-top: 5px;
+    }
+}
